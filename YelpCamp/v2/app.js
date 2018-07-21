@@ -1,44 +1,104 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
+var mongoose = require("mongoose");
+
+mongoose.connect("mongodb://localhost/yelp_camp");
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
 
-var campgrounds = [
-    { name: "Salmon Creek", image: "https://photosforclass.com/download/pixabay-1892494?webUrl=https%3A%2F%2Fpixabay.com%2Fget%2Fe83db80d2cfd053ed1584d05fb1d4e97e07ee3d21cac104496f2c17ca4edb0be_960.jpg&user=12019" },
-    { name: "Granit Hill", image: "https://photosforclass.com/download/flickr-7842069486" },
-    { name: "Mountain Goat's Rest", image: "https://photosforclass.com/download/pixabay-1851092?webUrl=https%3A%2F%2Fpixabay.com%2Fget%2Fe83db40e28fd033ed1584d05fb1d4e97e07ee3d21cac104496f2c178a5e4b3ba_960.jpg&user=Pexels" },
-    { name: "Salmon Creek", image: "https://photosforclass.com/download/pixabay-1892494?webUrl=https%3A%2F%2Fpixabay.com%2Fget%2Fe83db80d2cfd053ed1584d05fb1d4e97e07ee3d21cac104496f2c17ca4edb0be_960.jpg&user=12019" },
-    { name: "Granit Hill", image: "https://photosforclass.com/download/flickr-7842069486" },
-    { name: "Mountain Goat's Rest", image: "https://photosforclass.com/download/pixabay-1851092?webUrl=https%3A%2F%2Fpixabay.com%2Fget%2Fe83db40e28fd033ed1584d05fb1d4e97e07ee3d21cac104496f2c178a5e4b3ba_960.jpg&user=Pexels" }
-]
+// SCHEMA SETUP
+var campgroundSchema = new mongoose.Schema({
+    name: String,
+    image: String,
+    description: String
+});
 
+var Campground = mongoose.model("Campground", campgroundSchema);
+
+// Campground.create({
+//     name: "Granit Hill",
+//     image: "https://photosforclass.com/download/flickr-7842069486",
+//     description: "This is a huge granite hill, no bathrooms or water, but beautiful"
+// }, (err, campground) => {
+//     if (err) {
+//         console.log(err);
+//     }
+//     else {
+//         console.log("New Campground Created");
+//         console.log(campground);
+//     }
+// });
+
+var campgrounds = [
+    { name: "Salmon Creek", image: "https://photosforclass.com/download/flickr-3062180144" },
+    { name: "Arches Hill", image: "https://photosforclass.com/download/flickr-7842069486" },
+    { name: "Mountain Goat's Rest", image: "https://photosforclass.com/download/flickr-5051605295" },
+    { name: "Sunset Vertical", image: "https://photosforclass.com/download/flickr-1307278980" },
+    { name: "Kirk Creek", image: "https://photosforclass.com/download/flickr-7842069486" },
+    { name: "Mountain Goat's Rest", image: "https://photosforclass.com/download/flickr-3061337059" }
+]
+//INDEX - home page
 app.get("/", (req, res) => {
     res.render("landing");
 });
-
+//INDEX - Show all campgrounds
 app.get("/campgrounds", (req, res) => {
+    // Get all campgrounds from db
+    Campground.find({}, (err, campgrounds) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.render("index", { campgrounds: campgrounds }); //note: campgrounds obj --
+            //now applies to the campgrounds obj2 in the .find cb function for Campground.find.
+        }
+    });
 
-    res.render("campgrounds", { campgrounds: campgrounds });
+    // res.render("campgrounds", { campgrounds: campgrounds }); set up from array list
 });
-
+//CREATE - adds a new campground to DB
 app.post("/campgrounds", (req, res) => {
     //get data from form and add to campgrounds array
     var name = req.body.name;
     var image = req.body.image;
-    var newCampground = { name: name, image: image };
-    campgrounds.push(newCampground);
+    var desc = req.body.description;
+    var newCampground = { name: name, image: image, description: desc };
+    //Create a new campground and save to DB; use same newCampground obj from line above
+    Campground.create(newCampground, (err, newlyCreated) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.redirect("/campgrounds"); //same as when using array
+        }
+    });
+    // campgrounds.push(newCampground);from array
     //redirect back to campgrounds page.
-    res.redirect("/campgrounds"); //when redirecting, defaults to get request.
+    //res.redirect("/campgrounds"); //when redirecting, defaults to get request.
 });
 
+//NEW - Show form to create a new campground
 app.get("/campgrounds/new", (req, res) => {
     res.render("new.ejs");
 });
 
-
+//SHOW - show more info about one campground
+app.get("/campgrounds/:id", (req, res) => {
+    //find the campground with the provided ID
+    Campground.findById(req.params.id, (err, foundCampground) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            //render show template with that campground
+            res.render("show", { campground: foundCampground });
+        }
+    });
+});
 
 
 
