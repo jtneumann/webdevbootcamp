@@ -2,6 +2,10 @@ var bodyParser = require("body-parser"),
     mongoose = require("mongoose"),
     express = require("express"),
     app = express();
+// NEW ROUTE would not work until installed pathToRegexp?
+// getting err: /home/ubuntu/workspace/RESTfulRouting/RESTfulBlogApp/node_modules/path-to-regexp/index.js:63
+// continued: path = ('^' + path + (strict ? '' : path[path.length - 1] === '/' ? '?' : '/?'))
+var pathToRegexp = require('path-to-regexp');
 
 //APP CONFIG
 mongoose.connect("mongodb://localhost/restful_blog_app");
@@ -34,6 +38,7 @@ app.get("/", (req, res) => {
     res.redirect("/blogs");
 });
 
+//INDEX ROUTE
 app.get("/blogs", (req, res) => {
     Blog.find({}, (err, blogs) => {
         if (err) {
@@ -45,7 +50,24 @@ app.get("/blogs", (req, res) => {
     });
 });
 
+//NEW ROUTE
+app.get("/blogs/new", (req, res) => {
+    res.render("new");
+});
 
+//CREATE ROUTE
+app.post("/blogs", (req, res) => {
+    //create blog
+    Blog.create(req.body.blog, (err, newBlog) => {
+        if (err) {
+            console.log(err);
+            res.render("new");
+        }
+        else {
+            res.redirect("/blogs");
+        }
+    });
+});
 
 
 app.listen(process.env.PORT, process.env.IP, () => {
