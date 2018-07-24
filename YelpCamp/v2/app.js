@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+const ejsLint = require('ejs-lint');
 
 mongoose.connect("mongodb://localhost/yelp_camp");
 
@@ -41,10 +42,19 @@ var campgrounds = [
     { name: "Kirk Creek", image: "https://photosforclass.com/download/flickr-7842069486" },
     { name: "Mountain Goat's Rest", image: "https://photosforclass.com/download/flickr-3061337059" }
 ]
+
 //INDEX - home page
 app.get("/", (req, res) => {
-    res.render("landing");
+    Campground.find({}).sort({ "_id": -1 }).limit(3).exec(function(err, campgrounds) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.render("landing", { campgrounds: campgrounds });
+        }
+    });
 });
+
 //INDEX - Show all campgrounds
 app.get("/campgrounds", (req, res) => {
     // Get all campgrounds from db
@@ -60,6 +70,9 @@ app.get("/campgrounds", (req, res) => {
 
     // res.render("campgrounds", { campgrounds: campgrounds }); set up from array list
 });
+
+
+
 //CREATE - adds a new campground to DB
 app.post("/campgrounds", (req, res) => {
     //get data from form and add to campgrounds array

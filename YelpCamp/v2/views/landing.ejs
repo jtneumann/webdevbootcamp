@@ -3,6 +3,23 @@
 <h1>Landing Page!</h1>
 
 <p>Welcome to YelpCamp!</p>
+<div>
+            
+            <div class="col-md-4 col-sm-6">
+                <div class="thumbnail">
+                    <% for (var i = 0; i < campgrounds.length; i++) { %> 
+                     <img src="<%= campgrounds[i].image %>">
+                     <div class="caption">
+                         <h4><%= campgrounds[i].name %></h4>
+                     </div>
+                     <p>
+                         <a href="/campgrounds/<%= campgrounds[i]._id %>" class="btn btn-primary">More Info</a>
+                     </p>
+                </div>
+            </div>
+        <% }; %>
+</div>
+
 
 <a href="/campgrounds">View All Campgrounds</a>
 
