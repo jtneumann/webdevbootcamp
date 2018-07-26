@@ -33,6 +33,13 @@ passport.serializeUser(User.serializeUser()); //ibid
 passport.deserializeUser(User.deserializeUser()); // ibid
 //end passport config
 
+//allows every page to check to see if you're logged in or not rather than using {
+// currentUser: req.user } inside the render method.
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    next();
+});
+
 // Campground.create({
 //     name: "Granit Hill",
 //     image: "https://photosforclass.com/download/flickr-7842069486",
@@ -70,6 +77,7 @@ app.get("/", (req, res) => {
 
 //INDEX - Show all campgrounds
 app.get("/campgrounds", (req, res) => {
+
     // Get all campgrounds from db
     Campground.find({}, (err, campgrounds) => {
         if (err) {
@@ -108,12 +116,12 @@ app.post("/campgrounds", (req, res) => {
 });
 
 //NEW - Show form to create a new campground
-app.get("/campgrounds/new", (req, res) => {
+app.get("/campgrounds/new", isLoggedIn, (req, res) => {
     res.render("campgrounds/new");
 });
 
 //SHOW - show more info about one campground
-app.get("/campgrounds/:id", (req, res) => {
+app.get("/campgrounds/:id", isLoggedIn, (req, res) => {
     //find the campground with the provided ID
     Campground.findById(req.params.id).populate("comments").exec((err, foundCampground) => {
         if (err) {
@@ -130,7 +138,7 @@ app.get("/campgrounds/:id", (req, res) => {
 //COMMENTS ROUTES
 //===============
 
-app.get("/campgrounds/:id/comments/new", (req, res) => {
+app.get("/campgrounds/:id/comments/new", isLoggedIn, (req, res) => {
     //find campground by id
     Campground.findById(req.params.id, (err, campground) => {
         if (err) {
@@ -143,7 +151,7 @@ app.get("/campgrounds/:id/comments/new", (req, res) => {
 
 });
 
-app.post("/campgrounds/:id/comments", (req, res) => {
+app.post("/campgrounds/:id/comments", isLoggedIn, (req, res) => {
     //lookup campground using ID
     Campground.findById(req.params.id, (err, campround) => {
         if (err) {
@@ -189,6 +197,29 @@ app.post("/register", (req, res) => {
 
 });
 
+//show login form
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+//handle login
+//format as app.post("/route", middleware, callback)
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/campgrounds",
+    failureRedirect: "/login"
+}), (req, res) => {});
+
+//logout route
+app.get("/logout", (req, res) => {
+    req.logout();
+    res.redirect("/campgrounds");
+})
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
+}
 
 app.listen(process.env.PORT, process.env.IP, () => {
     console.log("Serving the YelpCamp");
