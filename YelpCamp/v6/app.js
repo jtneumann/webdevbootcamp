@@ -1,21 +1,37 @@
-var express = require("express");
-var app = express();
-var bodyParser = require("body-parser");
-var mongoose = require("mongoose");
-var Campground = require("./models/campground");
-var Comment = require("./models/comment");
-// var User = require("./models/user");
-var seedDB = require("./seeds");
+var express = require("express"),
+    app = express(),
+    bodyParser = require("body-parser"),
+    mongoose = require("mongoose"),
+    passport = require("passport"),
+    LocalStrategy = require("passport-local"),
+    Campground = require("./models/campground"),
+    Comment = require("./models/comment"),
+    User = require("./models/user"),
+    seedDB = require("./seeds");
 
 
-mongoose.connect("mongodb://localhost/yelp_camp_v4");
+mongoose.connect("mongodb://localhost/yelp_camp_v6");
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/public"));
 
 app.set("view engine", "ejs");
 
 seedDB();
 
+// PASSPORT CONFIGURATION
+app.use(require("express-session")({
+    secret: "Anything we want",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate())); //authenticate comes from passportLocalStategy in user.js file
+passport.serializeUser(User.serializeUser()); //ibid
+passport.deserializeUser(User.deserializeUser()); // ibid
+//end passport config
 
 // Campground.create({
 //     name: "Granit Hill",
@@ -151,6 +167,27 @@ app.post("/campgrounds/:id/comments", (req, res) => {
     });
 });
 
+//==============
+// AUTH ROUTES
+//==============
+//show register form
+app.get("/register", (req, res) => {
+    res.render("register");
+});
+//handle sign up logic
+app.post("/register", (req, res) => {
+    var newUser = (new User({ username: req.body.username }));
+    User.register(newUser, req.body.password, (err, user) => {
+        if (err) {
+            console.log(err);
+            return res.render("register");
+        }
+        passport.authenticate("local")(req, res, () => {
+            res.redirect("/campgrounds");
+        });
+    });
+
+});
 
 
 app.listen(process.env.PORT, process.env.IP, () => {
