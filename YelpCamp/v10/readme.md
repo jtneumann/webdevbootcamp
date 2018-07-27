@@ -95,6 +95,9 @@
 * Add Edit route for comments
 * Add Edit button
 * Add Udate route
+ 
+<!--/campgrounds/:id/edit -->
+<!--/campgrounds/:id/comments/:comment_id/edit -->
 
 ##Deleting Comments
 * Add Destroy route
