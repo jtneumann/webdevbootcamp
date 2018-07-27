@@ -68,5 +68,9 @@
 ##Refactor The Routes
 * Use Express router to reorganize all routes
 
+//Version 8
+##User + Comments
+* Associate users and comments
+* Save author's name to a comment automatically
 
 
