@@ -64,5 +64,8 @@
 * Add links to navbar
 * Show/hide auth links correctly
 
+//Version 7
+##Refactor The Routes
+* Use Express router to reorganize all routes
 
 
