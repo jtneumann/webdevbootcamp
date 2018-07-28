@@ -52,7 +52,7 @@ router.post("/", isLoggedIn, (req, res) => {
 //EDIT comments ROUTE
 
 // router.get("/:comment_id/edit", (req, res) => {
-    
+
 // });
 
 router.get("/:comment_id/edit", (req, res) => {
@@ -63,7 +63,7 @@ router.get("/:comment_id/edit", (req, res) => {
             console.log(err);
         }
         else {
-            res.render("/comments/edit", { campground_id: req.params.id, comment: foundComment });
+            res.render("comments/edit", { campground_id: req.params.id, comment: foundComment });
         }
     });
 
