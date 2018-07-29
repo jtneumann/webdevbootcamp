@@ -4,7 +4,7 @@ var Campground = require("../models/campground");
 var middleware = require("../middleware");
 
 //INDEX - Show all campgrounds
-router.get("/", middleware.isLoggedIn, (req, res) => {
+router.get("/", (req, res) => {
 
     // Get all campgrounds from db
     Campground.find({}, (err, campgrounds) => {
@@ -34,7 +34,6 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
         username: req.user.username
     }
     var newCampground = { name: name, price: price, image: image, description: desc, author: author };
-    console.log(req.user);
     //Create a new campground and save to DB; use same newCampground obj from line above
     Campground.create(newCampground, (err, newlyCreated) => {
         if (err) {
@@ -89,7 +88,6 @@ router.put("/:id", middleware.checkCampgroundOwnership, (req, res) => {
             res.redirect("/campgrounds/" + req.params.id);
         }
     });
-    //redirect somewhere(usually the show page)
 });
 
 //DESTROY CAMPGROUND ROUTE
