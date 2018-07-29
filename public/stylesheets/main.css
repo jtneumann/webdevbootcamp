@@ -13,3 +13,8 @@
 .delete-form {
     display: inline;
 }
+
+#logRegBox {
+    width: 50%;
+    padding: 20px;
+}
