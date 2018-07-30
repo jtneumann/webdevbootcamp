@@ -2,29 +2,50 @@
 
 
 
-<div class="container">
-    <div class="thumbnail center"  id="loginBox">
-        <div class="text-center">
-            <h2>Please Login</h2>
-            <hr>
-        </div>
-         <form action="/login" method="POST">
-             <div class="form-group">
-                 <label for="username">Username</label>
-                  <input type="text" class="form-control" name="username" placeholder="username">
-             </div>
-             <div class="form-group">
-                 <label for="password">Password</label>
-                 <input type="password" class="form-control" name="password" placeholder="password">
-                 <p class="help-block">Password must include 8 alphanumeric characters</p>
-             </div>
-             <div class="form-group">
-                 <input type="submit" value="Login" class="btn btn-default">
-             </div>
+<!--<div class="container">-->
+<!--    <div class="thumbnail center"  id="logRegBox">-->
+<!--        <div class="text-center">-->
+<!--            <h2>Please Login</h2>-->
+<!--            <hr>-->
+<!--        </div>-->
+<!--         <form action="/login" method="POST">-->
+<!--             <div class="form-group">-->
+<!--                 <label for="username">Username</label>-->
+<!--                  <input type="text" class="form-control" name="username" placeholder="username">-->
+<!--             </div>-->
+<!--             <div class="form-group">-->
+<!--                 <label for="password">Password</label>-->
+<!--                 <input type="password" class="form-control" name="password" placeholder="password">-->
+<!--                 <p class="help-block">Password must include 8 alphanumeric characters</p>-->
+<!--             </div>-->
+<!--             <div class="form-group">-->
+<!--                 <input type="submit" value="Login" class="btn btn-default">-->
+<!--             </div>-->
             
-        </form>
-    </div>
+<!--        </form>-->
+<!--    </div>-->
 
+<!--</div>-->
+
+
+<div class="row">
+    <h1 style="text-align: center">Login</h1>
+    <div style="width: 30%; margin: 25px auto;">
+        <form action="/login" method="post">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input class="form-control" type="text" name="username" placeholder="username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input class="form-control" type="password" name="password" placeholder="password">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-lg btn-primary btn-block">Login</button>
+            </div>
+        </form>
+        <a href="/campgrounds">Go Back</a>
+    </div>
 </div>
 
 <% include ./partials/footer %>

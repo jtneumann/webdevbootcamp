@@ -4,20 +4,33 @@ var Campground = require("../models/campground");
 var middleware = require("../middleware");
 
 //INDEX - Show all campgrounds
-router.get("/", (req, res) => {
+// router.get("/", (req, res) => {
 
-    // Get all campgrounds from db
-    Campground.find({}, (err, campgrounds) => {
+//     // Get all campgrounds from db
+//     Campground.find({}, (err, campgrounds) => {
+//         if (err) {
+//             console.log(err);
+//         }
+//         else {
+//             res.render("campgrounds/index", { campgrounds: campgrounds }); //note: campgrounds obj --
+//             //now applies to the campgrounds obj2 in the .find cb function for Campground.find.
+//         }
+//     });
+
+//     // res.render("campgrounds", { campgrounds: campgrounds }); set up from array list
+// });
+
+//INDEX - show all campgrounds
+router.get("/", function(req, res) {
+    // Get all campgrounds from DB
+    Campground.find({}, function(err, allCampgrounds) {
         if (err) {
             console.log(err);
         }
         else {
-            res.render("campgrounds/index", { campgrounds: campgrounds }); //note: campgrounds obj --
-            //now applies to the campgrounds obj2 in the .find cb function for Campground.find.
+            res.render("campgrounds/index", { campgrounds: allCampgrounds, page: 'campgrounds' });
         }
     });
-
-    // res.render("campgrounds", { campgrounds: campgrounds }); set up from array list
 });
 
 

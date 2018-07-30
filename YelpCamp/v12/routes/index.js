@@ -20,19 +20,27 @@ router.get("/", (req, res) => {
 // AUTH ROUTES
 //==============
 //show register form
-router.get("/register", (req, res) => {
-    res.render("register");
+// router.get("/register", (req, res) => {
+//     res.render("register");
+// });
+
+
+// show register form
+router.get("/register", function(req, res) {
+    res.render("register", { page: 'register' });
 });
+
+
 //handle sign up logic
 router.post("/register", (req, res) => {
     var newUser = (new User({ username: req.body.username }));
     User.register(newUser, req.body.password, (err, user) => {
         if (err) {
             req.flash("error", err.message);
-            return res.render("register");
+            return res.redirect("/register");
         }
         passport.authenticate("local")(req, res, () => {
-            req.flash("success", "Welcome to YelpCamp " + user.username);
+            req.flash("success", "You have successfully signed up! Welcome " + user.username);
             res.redirect("/campgrounds");
         });
     });
@@ -40,14 +48,22 @@ router.post("/register", (req, res) => {
 });
 
 //show login form
-router.get("/login", (req, res) => {
-    res.render("login");
+// router.get("/login", (req, res) => {
+//     res.render("login");
+// });
+
+//show login form
+router.get("/login", function(req, res) {
+    res.render("login", { page: 'login' });
 });
+
 //handle login
 //format as router.post("/route", middleware, callback)
 router.post("/login", passport.authenticate("local", {
     successRedirect: "/campgrounds",
-    failureRedirect: "/login"
+    failureRedirect: "/login",
+    successFlash: "Welcome Back!",
+    failureFlash: true //adds flash err message to login page
 }), (req, res) => {});
 
 //logout route
