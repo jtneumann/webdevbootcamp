@@ -34,6 +34,10 @@ router.get("/register", function(req, res) {
 //handle sign up logic
 router.post("/register", (req, res) => {
     var newUser = (new User({ username: req.body.username }));
+    //eval(require('locus'));
+    if (req.body.adminCode === 's5cReTc0de!') {
+        newUser.isAdmin = true;
+    }
     User.register(newUser, req.body.password, (err, user) => {
         if (err) {
             req.flash("error", err.message);

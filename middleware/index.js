@@ -13,7 +13,7 @@ middlewareObj.checkCampgroundOwnership = function(req, res, next) {
             }
             else {
                 //if so does user own the campground
-                if (foundCampground.author.id.equals(req.user._id)) {
+                if (foundCampground.author.id.equals(req.user._id || req.user.isAdmin)) {
                     //once up check the route below for "campgrounds/edit" Answer: this for views folder
                     next();
                 }
@@ -38,7 +38,7 @@ middlewareObj.checkCommentOwnership = function(req, res, next) {
             }
             else {
                 //if so does user own the comment
-                if (foundComment.author.id.equals(req.user._id)) {
+                if (foundComment.author.id.equals(req.user._id || req.user.isAdmin)) {
                     //once up check the route below for "campgrounds/edit" Answer: this for views folder
                     next();
                 }

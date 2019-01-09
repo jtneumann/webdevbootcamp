@@ -128,6 +128,17 @@ Add price to campground model as a String datatype
 Add price to views/campgrounds/new.ejs and views/campgrounds/edit.ejs (new and edit forms)
 Add price to views/camprounds/show.ejs (campground show page)
 
+//Version 12.1 - Adding GoogleMaps to YelpCamp.
+Steps:
+Sign up for a google dev acct - comes with gmail
+Get Google Maps API key and Restrict Google Maps API key
+Enable Geocoding API
+Get another key for Geocoding API and Add to app as ENV variable
+Add Google Maps scripts to app
+Display the campground location in show.ejs
+Update campground model
+Update new and edit forms - Add location input field
+Update campground routes.
 
 
 
